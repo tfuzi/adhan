@@ -1,0 +1,313 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+  <link rel="stylesheet" href="{% static '/css/index.css' %}" />
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rosarivo&display=swap" rel="stylesheet">
+  <title>Home</title>
+</head>
+
+<body>
+  <div class="background">
+    <!-- <img class="bg" src="/static/media/bg.png" alt=""> -->
+    <div class="container" style="display: anone">
+
+      <div class="wifi">
+        <img src="{% static '/media/wifi.png' %}"  height="70px" alt="wifi">
+      </div>
+
+
+      <nav>
+        <img class="logo" src="{% static '/media/logo.png' %}" alt="logo" height="150px" />
+        <div class="nav-content-right">
+
+          <svg style="height: 70%; width:20%">
+            <image xlink:href="/static/media/sun.svg" width="100%" height="85%" preserveAspectRatio="none" />
+            <text x="50%" y="30%" dominant-baseline="middle" fill="#fff" font-weight="700" text-anchor="middle" font-size="190%">
+              SUNRISE
+            </text>
+            <text x="50%" y="60%" fill="white" dominant-baseline="start" text-anchor="middle" font-size="24"
+              style="white-space: pre-wrap;" width="300"id="sunrise">
+              {{sunrise}}</text>
+          </svg>
+
+          
+          <svg style="height: 80%; width:20%">
+            <image xlink:href="/static/media/sun.svg" width="100%" height="85%" preserveAspectRatio="none" />
+            <text class="sunset-text" x="50%" y="30%" dominant-baseline="middle" fill="#fff" font-weight="700" text-anchor="middle" font-size="190%">
+              SUNSET
+            </text>
+            <text x="50%" y="60%" fill="white" dominant-baseline="start" text-anchor="middle" font-size="24"
+              style="white-space: pre-wrap;" width="300"id="sunset">
+              {{sunset}}</text>
+          </svg>
+
+
+          
+
+
+          <!-- <div class="sunrise neon-border">
+            <p>SUNRISE</p>
+            <p id="sunrise">
+              {{sunrise}}
+            </p>
+          </div> -->
+          <!-- <div class="sunset neon-border">
+            <p>SUNSET</p>
+            <p id="sunset">
+              {{sunset}}
+            </p>
+          </div> -->
+          <div class="date-time">
+            <div class="neonblue line"></div>
+            <div class="text">
+              <p class="time" id="time">12:00 AM</p>
+              <span class="line-with-squares">
+                <div class="line2"></div>
+              </span>
+
+              <p class="date" id="islamic-date">{{hijri_date}}</p>
+              <p class="greg date" id="date">Saturday ,June 10, 2023</p>
+            </div>
+            <div class="neongreen line"></div>
+          </div>
+        </div>
+      </nav>
+      <img class="lamp" src="/static/media/lamp.png" alt="" />
+
+
+      <div class="gap" style="height: 0vh;"></div>
+
+
+      <div class="content">
+        <div class="right">
+          <div class="misc">
+            <div class="notice-board">
+              <img src="/static/media/note.png" alt="notice" width="135%" style="margin-left:-15% ;" />
+              <div class="notice" ><ul style="list-style-type: none;"><li id="notice">{{notice}}</li></ul></div>
+            </div>
+            <div class="end-time">
+              <img src="/static/media/timeend.png" alt="time-end" width="100%" />
+              <div class="note">
+                <p id="next_time_text"  style="font-family: 'Rosarivo', serif;font-weight: 700;">Preferred Prayer Time Ends In:</p>
+                <span id="next_time">{{next_time}}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="prayer-timing">
+
+            <div class="prayer-time">
+              <p>Adhan</p>
+              <span class="adhan-time" id="fajr">
+                {{fajr}}
+              </span>
+              <span class="adhan-name">Fajar</span>
+              <span class="iqamah" id="fajrIqama">{{fajrIqama}}</span>
+              <p>Iqamah</p>
+            </div>
+
+            <div class="prayer-time">
+              <p>Adhan</p>
+              <span class="adhan-time" id="dhuhr">
+                {{dhuhr}}
+              </span>
+              <span class="adhan-name">Dhuhr</span>
+              <span class="iqamah" id="dhuhrIqama">{{dhuhrIqama}}</span>
+              <p>Iqamah</p>
+            </div>
+
+            <audio id="myAudio" style="display: none;">
+              Your browser does not support the audio element.
+            </audio>
+
+            <div class="prayer-time">
+              <p>Adhan</p>
+              <span class="adhan-time" id="asr">
+                {{asr}}
+              </span>
+              <span class="adhan-name">Asr</span>
+              <span class="iqamah" id="asrIqama">{{asrIqama}}</span>
+              <p>Iqamah</p>
+            </div>
+
+            <div class="prayer-time">
+              <p>Adhan</p>
+              <span class="adhan-time" id="maghrib">
+                {{maghrib}}
+              </span>
+              <span class="adhan-name">Maghrib</span>
+              <span class="iqamah" id="maghribIqama">{{maghribIqama}}</span>
+              <p>Iqamah</p>
+            </div>
+
+            <div class="prayer-time">
+              <p>Adhan</p>
+              <span class="adhan-time" id="isha">
+                {{isha}}
+              </span>
+              <span class="adhan-name">Isha</span>
+              <span class="iqamah" id="ishaIqama">{{ishaIqama}}</span>
+              <p>Iqamah</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="hadith-of-day">
+          <img src="/static/media/day.png" alt="hadith" width="100%" />
+          <div class="haditha" style="display: block; height: 100%;">
+            <div class="spacer" style="display: block;  height: 25%;width: 100%;background-color: rgba(240, 248, 255, 0);"></div>
+            <p style="font-family: 'Rosarivo', serif; margin-top: -0%;" class="hadith_heading">Hadith of the Day</p>
+            <p id="hadith">{{hadith}}</p>
+          </div>  
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <script>
+    setInterval(function () {
+      $.ajax({
+        url: "http://127.0.0.1:8000/get_data/",
+        type: "GET",
+        success: function (response) {
+          var data = response;
+          document.getElementById("time").innerHTML = data.time;
+          document.getElementById("date").innerHTML = data.date;
+          document.getElementById("islamic-date").innerHTML = data.hijri_date;
+          document.getElementById("fajr").innerHTML = data.fajr;
+          document.getElementById("fajrIqama").innerHTML = data.fajrIqama;
+          document.getElementById("dhuhr").innerHTML = data.dhuhr;
+          document.getElementById("dhuhrIqama").innerHTML = data.dhuhrIqama;
+          document.getElementById("asr").innerHTML = data.asr;
+          document.getElementById("asrIqama").innerHTML = data.asrIqama;
+          document.getElementById("maghrib").innerHTML = data.maghrib;
+          document.getElementById("maghribIqama").innerHTML = data.maghribIqama;
+          document.getElementById("isha").innerHTML = data.isha;
+          document.getElementById("ishaIqama").innerHTML = data.ishaIqama;
+          document.getElementById("hadith").innerHTML = data.hadith;
+          document.getElementById("next_time").textContent = data.next_time;
+          document.getElementById("sunrise").innerHTML = data.sunrise;
+          document.getElementById("sunset").innerHTML = data.sunset;
+          document.getElementById("notice").innerHTML = data.notice;
+
+          // change the preferred text
+          document.getElementById("next_time_text").textContent = data.next_time_text;
+          document.getElementById("next_time").textContent = data.next_time;
+          document.getElementById("next_time").style.color = data.color;
+
+          closest_time = data.closest_time;
+
+          // check the closest time and add active class
+          if (closest_time == data.fajr) {
+            // console.log("fajr");
+            // add active class to parent dive of element with id fajr
+            document.getElementById("fajr").parentElement.classList.add("active");
+            document.getElementById("fajrIqama").style.fontWeight = "700";
+            // remove active class from parent dive of other prayers
+            document.getElementById("dhuhr").parentElement.classList.remove("active");
+            document.getElementById("dhuhrIqama").style.fontWeight = "100";
+            document.getElementById("asr").parentElement.classList.remove("active");
+            document.getElementById("asrIqama").style.fontWeight = "100";
+            document.getElementById("maghrib").parentElement.classList.remove("active");
+            document.getElementById("maghribIqama").style.fontWeight = "100";
+            document.getElementById("isha").parentElement.classList.remove("active");
+            document.getElementById("ishaIqama").style.fontWeight = "100";
+          } else if (closest_time == data.dhuhr) {
+            // console.log("dhuhr");
+            // add active class to parent dive of element with id dhuhr
+            document.getElementById("dhuhr").parentElement.classList.add("active");
+            document.getElementById("dhuhrIqama").style.fontWeight = "700";
+            // remove active class from parent dive of other prayers
+            document.getElementById("fajr").parentElement.classList.remove("active");
+            document.getElementById("fajrIqama").style.fontWeight = "100";
+            document.getElementById("asr").parentElement.classList.remove("active");
+            document.getElementById("asrIqama").style.fontWeight = "100";
+            document.getElementById("maghrib").parentElement.classList.remove("active");
+            document.getElementById("maghribIqama").style.fontWeight = "100";
+            document.getElementById("isha").parentElement.classList.remove("active");
+            document.getElementById("ishaIqama").style.fontWeight = "100";
+
+          } else if (closest_time == data.asr) {
+            // console.log("asr");
+            // add active class to parent dive of element with id asr
+            document.getElementById("asr").parentElement.classList.add("active");
+            document.getElementById("asrIqama").style.fontWeight = "700";
+            // remove active class from parent dive of other prayers
+            document.getElementById("fajr").parentElement.classList.remove("active");
+            document.getElementById("fajrIqama").style.fontWeight = "100";
+            document.getElementById("dhuhr").parentElement.classList.remove("active");
+            document.getElementById("dhuhrIqama").style.fontWeight = "100";
+            document.getElementById("maghrib").parentElement.classList.remove("active");
+            document.getElementById("maghribIqama").style.fontWeight = "100";
+            document.getElementById("isha").parentElement.classList.remove("active");
+            document.getElementById("ishaIqama").style.fontWeight = "100";
+
+
+          } else if (closest_time == data.maghrib) {
+            // console.log("maghrib");
+            // add active class to parent dive of element with id maghrib
+            document.getElementById("maghrib").parentElement.classList.add("active");
+            document.getElementById("maghribIqama").style.fontWeight = "700";
+            // remove active class from parent dive of other prayers
+            document.getElementById("fajr").parentElement.classList.remove("active");
+            document.getElementById("fajrIqama").style.fontWeight = "100";
+            document.getElementById("dhuhr").parentElement.classList.remove("active");
+            document.getElementById("dhuhrIqama").style.fontWeight = "100";
+            document.getElementById("asr").parentElement.classList.remove("active");
+            document.getElementById("asrIqama").style.fontWeight = "100";
+            document.getElementById("isha").parentElement.classList.remove("active");
+            document.getElementById("ishaIqama").style.fontWeight = "100";
+
+          } else if (closest_time == data.isha) {
+            // console.log("isha");
+            // add active class to parent dive of element with id isha
+            document.getElementById("isha").parentElement.classList.add("active");            
+            document.getElementById("ishaIqama").style.fontWeight = "700";
+            // remove active class from parent dive of other prayers
+            document.getElementById("fajr").parentElement.classList.remove("active");
+            document.getElementById("fajrIqama").style.fontWeight = "100";
+            document.getElementById("dhuhr").parentElement.classList.remove("active");
+            document.getElementById("dhuhrIqama").style.fontWeight = "100";
+            document.getElementById("asr").parentElement.classList.remove("active");
+            document.getElementById("asrIqama").style.fontWeight = "100";
+            document.getElementById("maghrib").parentElement.classList.remove("active");
+            document.getElementById("maghribIqama").style.fontWeight = "100";
+          }
+
+          // check if the time is equal to the adhan time and play the adhan
+          if (data.time == data.fajr) {
+            playSound("{{fajr_adhan}}");
+          } else if (data.time == data.dhuhr) {
+            playSound("{{dhuhr_adhan}}");
+          } else if (data.time == data.asr) {
+            playSound("{{asr_adhan}}");
+          } else if (data.time == data.maghrib) {
+            playSound("{{maghrib_adhan}}");
+          } else if (data.time == data.isha) {
+            playSound("{{isha_adhan}}");
+          }
+        }
+      });
+    }, 1000); // Repeat the request every 1000 milliseconds (1 second)
+    var audio = document.getElementById("myAudio");
+
+    function playSound(url) {
+      audio.src = url;
+      audio.play();
+    }
+
+    function pauseSound() {
+      audio.pause();
+    }
+  </script>
+</body>
+
+</html>

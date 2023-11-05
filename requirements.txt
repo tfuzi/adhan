@@ -1,0 +1,4 @@
+django
+geopy
+hijri_converter
+django-cors-headers

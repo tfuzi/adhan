@@ -1,0 +1,512 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static '/css/setting.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <title>Settings</title>
+</head>
+
+<body>
+<form method="post">
+    {% csrf_token %}
+    <!-- center the class on the page -->
+    <div class="background" style="max-width: 650px; margin: 0 auto; background-color:whitesmoke; padding: 20px;">
+        <div class="content">
+            <h2 style="margin-top: 20px;">General Settings</h2>
+            <div class="form-container" style="margin-top: 20px;">
+
+                <div class="label">
+                    <label for="">Date</label>
+                    
+                </div>
+                <div class="field">
+                    <input type="datetime-local" style="width: 100%;
+                    padding: 10px;
+                    border: 1px solid #ccc;
+                    border-radius: 8px;
+                    box-sizing: border-box;" name="user_date" placeholder="Date" id="greg_date" onchange="updateIslamicDate();" value="{{user_date_time}}">
+                </div>
+
+                <div class="label">
+                    <label for="">Islamic Date</label>
+                    
+                </div>
+                <div class="field">
+                    <input type="text" placeholder="Date" id="hijri_date" disabled>
+                </div>
+                <script>
+
+                    // on dom loaded
+                    $(document).ready(function() {
+                        updateIslamicDate();
+                    });
+
+                    function updateIslamicDate() {
+                        var gregDate = document.getElementById("greg_date").value;
+                        var hijriDate = document.getElementById("hijri_date");
+                        var date = new Date(gregDate);
+                        var options = {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric"
+                        };
+                        // make ajax call to get islamic date
+                        $.ajax({
+                            url: "/get_hijri?date=" + date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear(),
+                            type: "GET",
+                            success: function(response) {
+                                var islamicDate = response.hijri_date;
+                                console.log(islamicDate);
+                                hijriDate.value = islamicDate;
+                            }
+                        });
+                    }
+                </script>
+                
+                <div class="label">
+                    <label for="">Location</label>
+                    <div class="automate">
+                        <button type="button" onclick="getLocation()">Get Location</button>
+                    </div>
+                </div>
+
+                
+                <div class="field">
+                    <input type="text" name="location" id="location-input" placeholder="Location" value="{{location}}">
+                </div>
+
+                
+                <div class="automate">
+                    <button type="button" id="location-button" onclick="updateLocationFromLatLng()">Update Location</button>
+                </div>
+
+                
+                <div class="label" style="margin-top: 20px;">
+                    <label for="">Country</label>
+                    
+                </div>
+                <div class="field">
+                    <input type="text" name="country" placeholder="Country" id="country" value="{{country}}">
+                </div>
+
+                                
+                <div class="label">
+                    <label for="">City</label>
+                </div>
+                <div class="field">
+                    <input type="text" name="city"  placeholder="City" id="city" value="{{city}}">
+                </div>
+
+                <div class="label">
+                    <label for="">Zip Code</label>
+                    
+                </div>
+                <div class="field">
+                    <input type="text" name="zipcode" placeholder="Zip Code" id="zipcode" value="{{zipcode}}">
+                </div>
+
+                <!-- get location JS -->
+                <script>
+                    function updateLocationFromLatLng() {
+                        var location = document.getElementById("location-input").value;
+
+                        locationButton = document.getElementById('location-button');
+                        // change text to loading...
+                        locationButton.innerHTML = "Loading...";
+                        // disable button
+                        locationButton.disabled = true;
+
+                        // splitt the string with ", "
+                        var locationArray = location.split(", ");
+                        var latitude = locationArray[0];
+                        var longitude = locationArray[1];
+
+                        // make ajax call to get islamic date
+                        $.ajax({
+                            url: "/get_city_country?lat=" + latitude + "&lng=" + longitude,
+                            type: "GET",
+                            success: function(response) {
+                                var response = response;
+                                console.log(response);
+
+                                country = document.getElementById('country');
+                                city = document.getElementById('city');
+                                zipcode = document.getElementById('zipcode');
+
+                                country.value = response.country;
+                                city.value = response.city;
+                                zipcode.value = response.postcode;
+
+                                // change text to loading...
+                                locationButton.innerHTML = "Update Location";
+                                // disable button
+                                locationButton.disabled = false;
+                            },
+                            error: function(error) {
+                                console.log(error);
+                                // change text to loading...
+                                locationButton.innerHTML = "Update Location";
+                                // disable button
+                                locationButton.disabled = false;
+                            }
+                        });
+                    }
+
+                    function updateLocationFromZipCode() {
+
+                    }
+
+                    function getLocation() {
+                        // if (navigator.geolocation) {
+                        //     navigator.geolocation.getCurrentPosition(showPosition);
+                        //     console.log("location updated");
+                        //     console.log(latitude, longitude)
+                        // } else {
+                        //     alert("Geolocation is not supported by this browser.");
+                        // }
+                        
+                        $.ajax({
+                            url: "/get_lat_lon/",
+                            type: "POST",
+                            success: function(response) {
+                                var response = response;
+                                console.log(response);
+                                // location = document.getElementById('location-input');
+                                // location.value = response.latitude + ", " + response.longitude;
+                                showPosition(response.latitude, response.longitude);
+                            },
+                            error: function(error) {
+                                console.log(error);
+                            }
+                        });
+                        
+                    }
+
+                    function showPosition(latitude, longitude) {
+                        var locationInput = document.getElementById("location-input");
+                        locationInput.value = latitude + ", " + longitude;
+                    }
+                    document.addEventListener("DOMContentLoaded", function(event) {
+                        var selectElement = document.getElementById("azan_audio");
+                        selectElement.value = "{{azan}}"; // This will select the option with value "option3"
+
+                        var selectElement = document.getElementById("school");
+                        selectElement.value = "{{school}}"; // This will select the option with value "option3"
+
+                    });
+
+                </script>
+
+
+
+                <div class="label">
+                    <label for="">Institutions</label>
+
+                </div>
+                <div class="field">
+                    <select name="school" id="school">
+                        <option value="1">University of Islamic Sciences, Karachi</option>
+                        <option value="2">Islamic Society of North America</option>
+                        <option value="3">Muslim World League</option>
+                        <option value="4">Umm Al-Qura University, Makkah</option>
+                        <option value="5">Egyptian General Authority of Survey</option>
+                        <option value="6">Institute of Geophysics, University of Tehran</option>
+                        <option value="7">Gulf Region</option>
+                        <option value="8">Kuwait</option>
+                        <option value="9">Qatar</option>
+                        <option value="10">Majlis Ugama Islam Singapura, Singapore</option>
+                        <option value="11">Union Organization islamic de France</option>
+                        <option value="12">Diyanet İşleri Başkanlığı, Turkey</option>
+                        <option value="13">Spiritual Administration of Muslims of Russia</option>
+                    </select>
+                    
+                </div>
+
+
+
+
+
+                <audio id="myAudio" style="display: none;">
+                    Your browser does not support the audio element.
+                  </audio>
+                <div class="label">
+                    <label for="">Select Azan Audio</label>
+
+                </div>
+                <div class="field">
+                    <select name="audio" id="azan_audio">
+                        <option value="no_audio">No Sound</option>
+                        <option value="https://cdn.aladhan.com/audio/adhans/a1.mp3">Azan 1</option>
+                        <option value="https://cdn.aladhan.com/audio/adhans/a2.mp3">Azan 2</option>
+                        <option value="https://cdn.aladhan.com/audio/adhans/a3.mp3">Azan 3</option>
+                        <option value="https://cdn.aladhan.com/audio/adhans/a4.mp3">Azan 4</option>
+                    </select>
+                    <button type="button" id="azan-button" onclick="playAzan();" style="margin-top: 0; margin-left: 20px;">Test</button>
+                    <button type="button" id="pause-button" onclick="pauseAzan();" style="margin-top: 0; margin-left: 20px;">Pause</button>
+                </div>
+
+                <script>
+                    function playAzan() {
+                        document.getElementById("myAudio").src = document.getElementById("azan_audio").value;
+                        document.getElementById("myAudio").play();
+                    }
+                    function pauseAzan() {
+                        // pause the audio 
+                        document.getElementById("myAudio").pause();
+                    }
+                    
+                </script>
+
+
+
+                <div class="label">
+                    
+                   <h2 style="margin-top: 20px; margin-left: 0; padding-left:0;">Prayer Timings</h2>
+                    <div class="automate">
+                        <button type="button" id="timings-button" onclick="getTimings()">Get Timings</button>
+                        
+                <script>
+                    function getTimings() {
+                        
+                        timingsButton = document.getElementById('timings-button');
+                        // change text to loading...
+                        timingsButton.innerHTML = "Loading...";
+                        // disable button
+                        timingsButton.disabled = true;
+
+
+                        fajarAdhan = document.getElementById('fajr-adhan');
+                        duhurAdhan = document.getElementById('duhur-adhan');
+                        asarAdhan = document.getElementById('asar-adhan');
+                        maghribAdhan = document.getElementById('maghrib-adhan');
+                        ishaAdhan = document.getElementById('isha-adhan');
+                        
+                        fajarIqamah = document.getElementById('fajr-iqamah');
+                        duhurIqamah = document.getElementById('duhur-iqamah');
+                        asarIqamah = document.getElementById('asar-iqamah');
+                        maghribIqamah = document.getElementById('maghrib-iqamah');
+                        ishaIqamah = document.getElementById('isha-iqamah');
+
+                        fajarEnd = document.getElementById('fajr-end');
+                        duhurEnd = document.getElementById('duhur-end');
+                        asarEnd = document.getElementById('asar-end');
+                        maghribEnd = document.getElementById('maghrib-end');
+                        ishaEnd = document.getElementById('isha-end');
+
+                        sunrise = document.getElementById('sunrise');
+                        sunset = document.getElementById('sunset');
+                        
+                        method = document.getElementById('school').value;
+                        city = document.getElementById('city').value;
+                        country = document.getElementById('country').value;
+                        
+                        console.log(method, city, country);
+
+                        $.ajax({
+                            url: "/get_timings/",
+                            data: {
+                                method: method,
+                                city: city,
+                                country: country,
+                            },
+                            type: "POST",
+                            success: function(response) {
+                                var islamicDate = response;
+                                console.log(islamicDate);
+                                
+                                fajarAdhan.value = islamicDate.Fajr;
+                                duhurAdhan.value = islamicDate.Dhuhr;
+                                asarAdhan.value = islamicDate.Asr;
+                                maghribAdhan.value = islamicDate.Maghrib;
+                                ishaAdhan.value = islamicDate.Isha;
+                                sunrise.value = islamicDate.Sunrise;
+                                sunset.value = islamicDate.Sunset;
+
+                                fajarIqamah.value = islamicDate.Fajr;
+                                duhurIqamah.value = islamicDate.Dhuhr;
+                                asarIqamah.value = islamicDate.Asr;
+                                maghribIqamah.value = islamicDate.Maghrib;
+                                ishaIqamah.value = islamicDate.Isha;
+
+                                // fajarEnd.value = islamicDate.FajrEnd;
+                                // duhurEnd.value = islamicDate.DhuhrEnd;
+                                // asarEnd.value = islamicDate.AsrEnd;
+                                // maghribEnd.value = islamicDate.MaghribEnd;
+                                // ishaEnd.value = islamicDate.IshaEnd;
+
+                                // change text to loading...
+                                timingsButton.innerHTML = "Get Timings";
+                                // disable button
+                                timingsButton.disabled = false;
+                                
+                            },
+                            error: function(error) {
+                                console.log(error);
+                                // change text to loading...
+                                timingsButton.innerHTML = "Get Timings";
+                                // disable button
+                                timingsButton.disabled = false;
+                            }
+                        });
+                    }
+                </script>
+                    </div>
+                </div>
+                <div class="label" style="padding-top: 20px; margin-left:0; padding-left:0;">
+                    <label for="" style="font-weight: bolder; font-size: larger;">Fajar</label>
+                </div>
+                <div class="input-group">
+                    <label for="fajr-adhan" style="width: 150px; margin-top: 10px;">Adhan:</label>
+                    <input class="namaz" name="fajarAdhan" id="fajr-adhan" type="text" placeholder="Adhan" value="{{fajrAdhan}}">
+                </div>
+                <div class="input-group">
+                    <label for="fajr-iqamah" style="width: 150px; margin-top: 10px;">Iqamah:</label>
+                    <input class="namaz" name="fajarIqama" id="fajr-iqamah" type="text" placeholder="Iqamah" value="{{fajrIqama}}">
+                </div>
+
+                <div class="label" style="padding-top: 20px; margin-left:0; padding-left:0;">
+                    <label for="" style="font-weight: bolder; font-size: larger;">Duhur</label>
+                </div>
+                <div class="input-group">
+                    <label for="duhur-adhan" style="width: 150px; margin-top: 10px;">Adhan:</label>
+                    <input class="namaz" name="duhurAdhan" id="duhur-adhan" type="text" placeholder="Adhan" value="{{duhurAdhan}}">
+                </div>
+                <div class="input-group">
+                    <label for="duhur-iqamah" style="width: 150px; margin-top: 10px;">Iqamah:</label>
+                    <input class="namaz" name="duhurIqama" id="duhur-iqamah" type="text" placeholder="Iqamah" value="{{duhurIqama}}">
+                </div>
+                <!-- Repeat the above structure for Asar, Maghrib, and Isha -->
+                
+                <div class="label" style="padding-top: 20px; margin-left:0; padding-left:0;">
+                    <label for="" style="font-weight: bolder; font-size: larger;">Asar</label>
+                </div>
+                <div class="input-group">
+                    <label for="asar-adhan" style="width: 150px; margin-top: 10px;">Adhan:</label>
+                    <input class="namaz" name="asarAdhan" id="asar-adhan" type="text" placeholder="Adhan" value="{{asarAdhan}}">
+                </div>
+                <div class="input-group">
+                    <label for="asar-iqamah" style="width: 150px; margin-top: 10px;">Iqamah:</label>
+                    <input class="namaz" name="asarIqama" id="asar-iqamah" type="text" placeholder="Iqamah" value="{{asarIqama}}">
+                </div>
+                <!-- Repeat the above structure for Maghrib and Isha -->
+                
+                <div class="label" style="padding-top: 20px; margin-left:0; padding-left:0;">
+                    <label for="" style="font-weight: bolder; font-size: larger;">Maghrib</label>
+                </div>
+                <div class="input-group">
+                    <label for="maghrib-adhan" style="width: 150px; margin-top: 10px;">Adhan:</label>
+                    <input class="namaz" name="maghribAdhan" id="maghrib-adhan" type="text" placeholder="Adhan" value="{{maghribAdhan}}">
+                </div>
+                <div class="input-group">
+                    <label for="maghrib-iqamah" style="width: 150px; margin-top: 10px;">Iqamah:</label>
+                    <input class="namaz" name="maghribIqama" id="maghrib-iqamah" type="text" placeholder="Iqamah" value="{{maghribIqama}}">
+                </div>
+                <!-- Repeat the above structure for Isha -->
+                
+                <div class="label" style="padding-top: 20px; margin-left:0; padding-left:0;">
+                    <label for="" style="font-weight: bolder; font-size: larger;">Isha</label>
+                </div>
+                <div class="input-group">
+                    <label for="isha-adhan" style="width: 150px; margin-top: 10px;">Adhan:</label>
+                    <input class="namaz" name="ishaAdhan" id="isha-adhan" type="text" placeholder="Adhan" value="{{ishaAdhan}}">
+                </div>
+                <div class="input-group">
+                    <label for="isha-iqamah" style="width: 150px; margin-top: 10px;">Iqamah:</label>
+                    <input class="namaz" name="ishaIqama" id="isha-iqamah" type="text" placeholder="Iqamah" value="{{ishaIqama}}">
+                </div>
+                
+
+                <div class="label" style="padding-top: 20px; margin-left:0; padding-left:0;">
+                    <label for="" style="font-weight: bolder; font-size: larger;">Sunrise</label>
+                    
+                </div>
+                <div class="field">
+                    <input type="text" name="sunrise" id="sunrise" placeholder="Sunrise" value="{{sunrise}}">
+                </div>
+
+
+
+
+                <div class="label" style="padding-top: 20px; margin-left:0; padding-left:0;">
+                    <label for="" style="font-weight: bolder; font-size: larger;">Sunset</label>
+                    
+                </div>
+                <div class="field">
+                    <input type="text" name="sunset" id="sunset"  placeholder="Sunset" value="{{sunset}}">
+                </div>
+
+
+                
+                <h2 style="margin-top: 20px;">Hadith of the Day</h2>
+
+
+                <div class="label">
+                    <label for=""></label>
+                    <div class="automate">
+                        <button type="button" id="button-hadith" onclick="getRandomHadith()">Generate Random Hadith</button>
+                    </div>
+                </div>
+                <div class="field">
+                    <textarea name="hadith" id="hadith" cols="30" rows="10">{{hadith}}</textarea>
+                </div>
+
+                <script>
+                    function getRandomHadith() {
+                        // change the text to loading...
+                        buttonHadith = document.getElementById('button-hadith');
+                        buttonHadith.innerHTML = "Loading...";
+                        // disable button
+                        buttonHadith.disabled = true;
+
+                        // make ajax call to get islamic date
+                        $.ajax({
+                            url: "/get_random_hadith/",
+                            type: "GET",
+                            success: function(response) {
+                                var hadith = response.hadith;
+                                console.log(hadith);
+                                document.getElementById("hadith").innerHTML = hadith;
+                                // change the text to Generate Random Hadith
+                                buttonHadith.innerHTML = "Generate Random Hadith";
+                                //enable button
+                                buttonHadith.disabled = false;
+                            },
+                            error: function(response) {
+                                
+                                // change the text to Generate Random Hadith
+                                buttonHadith.innerHTML = "Generate Random Hadith";
+                                //enable button
+                                buttonHadith.disabled = false;
+                            }
+                        });
+                    }
+
+                </script>
+
+
+                
+                <h2 style="margin-top: 20px;">Notice Board</h2>
+
+
+                <div class="label">
+                </div>
+            </div>
+            <div class="field">
+                <textarea name="notice" id="notice" cols="30" rows="10">{{notice}}</textarea>
+            </div>
+
+            <button type="submit">Save</button>
+
+
+        </div>
+    </div>
+    </div>
+</form>
+</body>
+
+</html>

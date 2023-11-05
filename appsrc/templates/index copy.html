@@ -1,0 +1,534 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <link rel="stylesheet" href="{% static '/css/index.css' %}">
+
+    <title>Index
+    </title>
+</head>
+<style>
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: whitesmoke;
+    font-family: Arial, sans-serif;
+    z-index: 10;
+
+}
+
+.background {
+    display: block;
+    height: 100vh;
+    width: 100vw;
+    background: url(/static/media/bg.png);
+    background-size: cover;
+    z-index: -100;
+}
+.lamp{
+    position: absolute;
+    top: 0;
+    left: 20%;
+    z-index: 5;
+}
+/* .bg{
+    position: absolute;
+    z-index: -100;
+    width: 100vw;
+    height: 100vh;
+} */
+.container {
+    height: 83vh;
+    width: 100vw;
+    display: block;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem 2rem 2rem 0;
+    width: 100vw;
+    height: 170px;
+    overflow: hidden;
+}
+
+.logo {
+    margin-top: 20px;
+}
+
+
+.nav-content-right {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+
+
+.neon-border {
+    margin: 50px;
+    position: relative;
+    display: inline-block;
+    padding: 10px;
+    /* background-color: black; */
+}
+
+.neon-border p {
+    text-align: center;
+    color: white;
+    font-size: 25px;
+    /* min-width: 120px; */
+}
+
+.neon-border::after {
+    content: "";
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    border-radius: 15px;
+    box-shadow: 0 0 10px 5px white;
+
+}
+
+.date-time {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+}
+
+.line {
+    width: 10px;
+    height: 500px;
+    margin: 10px 0px;
+}
+
+.text{
+    font-size: 20px;
+    margin: 30px;
+    text-align: center;
+}
+
+.text .time{
+    font-size: 40px;
+}
+.text .greg{
+    font-size: 18px;
+}
+
+
+.line2{
+    display: inline-block;
+    width: 200px;
+    height: 2px;
+    background-color: #fff;
+    margin: 10px -10px;
+}
+
+.line-with-squares{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+  .line-with-squares::before,
+  .line-with-squares::after {
+    content: '';
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background-color: rgb(255, 255, 255);
+    margin: 0 5px;
+  }
+
+
+
+
+.neongreen {
+    
+    background-color: #00ff00;
+    box-shadow: 0 0 10px 8px #00ff00;
+
+}
+
+.neonblue {
+    background-color: #00bfff;
+    box-shadow: 0 0 10px 8px #00bfff;
+
+}
+
+
+.content {
+    display: flex;
+    justify-content: space-between;
+}
+
+.right{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 200%;
+    /* background-color: #00bfff; */
+}
+
+.misc {
+    display: flex;
+    justify-content: space-between;
+    /* background-color: aliceblue; */
+    /* height: calc(60vh - 180px); */
+    height: 300%;
+    align-items: center;
+
+
+
+}
+
+.notice-board , .end-time{
+    width: 100%;
+    height: 100px;
+    display: block;
+}
+
+.notice-board {
+    position: relative;
+    display: block;
+    /* background-color: brown; */
+    width: 150%;
+    height: fit-content;
+    /* background: url(/static/media/day.png); */
+    /* height: calc(83vh - 180px); */
+    background-size: contain;
+    background-repeat: no-repeat;
+
+
+    
+  position: relative;
+  text-align: center;
+  color: white;
+}
+
+.notice{
+    position: absolute;
+    width: 75%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* background-color: #00ff0050; */
+    font-size: 20px;
+}
+
+
+
+
+.end-time{
+    position: relative;
+    display: block;
+    /* background-color: brown; */
+    width: 100%;
+    height: fit-content;
+    /* background: url(/static/media/day.png); */
+    /* height: calc(83vh - 180px); */
+    background-size: contain;
+    background-repeat: no-repeat;
+
+
+    
+  position: relative;
+  text-align: center;
+  color: white;
+
+}
+.note{
+    position: absolute;
+    width: 75%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 18px;
+}
+
+.note span{
+    font-size: 30px;
+    font-weight: bold;
+    color: #00ff00;
+}
+
+
+.prayer-timing{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    /* background-color: #00ff0050; */
+    /* height: 250px; */
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+}
+
+.prayer-time{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 20%;
+    /* min-width: 200px; */
+    /* height: 100%; */
+    border-radius: 20%;
+    background-color: #173732;
+    border: #fff 2px solid;
+    margin: 10px;
+    box-shadow: #fff 0px 0px 5px 0px;
+    font-size: 30px;
+}
+
+.prayer-time span{
+    font-size: 25px;
+}
+.prayer-time p{
+    font-size: 20px;
+    margin: 0;
+    padding: 5px;
+}
+
+.prayer-timing .active{
+    background: linear-gradient( to right, black, #a07030);
+    box-shadow: #00ff00 0px 0px 5px 0px;
+}
+.prayer-timing .active .iqamah{
+    color: #ff0000;
+}
+
+.hadith-of-day {
+    position: relative;
+    display: block;
+    /* background-color: brown; */
+    width: 100%;
+    height: 100%;
+    /* background: url(/static/media/day.png); */
+    /* height: calc(83vh - 180px); */
+    background-size: contain;
+    background-repeat: no-repeat;
+
+
+    
+  position: relative;
+  text-align: center;
+  color: white;
+
+    /* padding: 20px;
+    padding-top: 150px; */
+}
+
+/* img.hadith{position: absolute;
+        height: 95%;
+        width: 95%;
+        display: block;
+        z-index: 3;
+    } */
+
+
+.haditha {
+
+    display: block;
+    /* background-color: rgba(0, 0, 0, 0.298);  */
+    padding: 20px 0px 20px 20px;
+    font-size: 20px;
+    width: 80%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -30%);
+
+}
+
+.hadith-of-day p {
+    padding: 10px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@media only screen and (max-width: 1440px) {
+    .haditha{
+        font-size: 15px;
+    }
+    .prayer-time p{
+        font-size: 15px;
+    }
+    .prayer-time span{
+        font-size: 15px;
+    }
+
+    .note{
+        font-size: 10px;
+    }
+    .neon-border p{
+        font-size: 15px;
+        min-width: none;
+    }
+    .note span{
+        font-size: 20px;
+    }
+    .notice{
+        font-size: 18px;
+    }
+    
+    .lamp{
+        height: 15%;
+    }
+  }
+
+</style>
+
+
+
+<body>
+
+    <img class="lamp" src="/static/media/lamp.png" alt="">
+    <div class="background">
+        <!-- <img class="bg" src="/static/media/bg.png" alt=""> -->
+        <div class="container" style="display: anone;">
+
+
+            <nav>
+                <img class="logo" src="{% static '/media/logo.png' %}" alt="logo" height="150px">
+                <div class="nav-content-right">
+                    <div class="sunrise neon-border">
+                        <p>SUNRISE</p>
+                        <p>12:00 AM</p>
+                    </div>
+                    <div class="sunset neon-border">
+                        <p>SUNSET</p>
+                        <p>12:00 AM</p>
+                    </div>
+                    <div class="date-time">
+                        <div class="neongreen line"></div>
+                        <div class="text">
+                            <p class="time">12:00 AM</p>
+
+                            <span class="line-with-squares">
+                                <div class="line2"></div>
+                            </span>
+
+                            <p class="date">Dhuʻl-Qiʻdah 28, 1444 AH</p>
+                            <p class="greg date">Saturday ,June 10, 2023</p>
+                        </div>
+                        <div class="neonblue line"></div>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="content">
+
+                <div class="right">
+
+                    <div class="misc">
+
+                        <div class="notice-board">
+                            <img src="/static/media/note.png" alt="notice" width="100%">
+                            <div class="notice">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
+                                voluptatum.</div>
+                        </div>
+                        <div class="end-time">
+                            <img src="/static/media/timeend.png" alt="time-end" width="100%">
+                            <div class="note">
+                                <p>Preferrd Prayer Time Ends In :</p>
+                                <span> 15:00</span>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="prayer-timing">
+
+                        <div class="prayer-time">
+                            <p>Adhan</p>
+                            <span class="adhan-time">12:00 AM</span>
+                            <span class="adhan-name">Fajar</span>
+                            <span class="iqamah">12:00 AM</span>
+                            <p>Iqamah</p>
+                        </div>
+
+                        <div class="prayer-time active">
+                            <p>Adhan</p>
+                            <span class="adhan-time">12:00 AM</span>
+                            <span class="adhan-name">Fajar</span>
+                            <span class="iqamah">12:00 AM</span>
+                            <p>Iqamah</p>
+                        </div>
+
+                        <div class="prayer-time">
+                            <p>Adhan</p>
+                            <span class="adhan-time">12:00 AM</span>
+                            <span class="adhan-name">Fajar</span>
+                            <span class="iqamah">12:00 AM</span>
+                            <p>Iqamah</p>
+                        </div>
+
+                        <div class="prayer-time">
+                            <p>Adhan</p>
+                            <span class="adhan-time">12:00 AM</span>
+                            <span class="adhan-name">Fajar</span>
+                            <span class="iqamah">12:00 AM</span>
+                            <p>Iqamah</p>
+                        </div>
+
+                        <div class="prayer-time">
+                            <p>Adhan</p>
+                            <span class="adhan-time">12:00 AM</span>
+                            <span class="adhan-name">Fajar</span>
+                            <span class="iqamah">12:00 AM</span>
+                            <p>Iqamah</p>
+                        </div>
+
+                        
+                            
+
+                    </div>
+
+                </div>
+
+
+
+
+                <div class="hadith-of-day">
+                    <img src="/static/media/day.png" alt="hadith" width="90%">
+                    <div class="haditha"> Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi voluptatibus placeat, ratione reprehenderit necessitatibus dolorum quod quisquam quidem modi voluptates. Eveniet, pariatur vero. Reprehenderit, repudiandae mollitia iste facilis est doloribus fugiat inventore omnis laboriosam, repellendus consectetur non sit aut, explicabo minus quis fugit animi. Alias consectetur officia dicta eligendi molestias?
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+
+
+
+    </div>
+
+</body>
+
+</html>
